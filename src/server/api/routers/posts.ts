@@ -50,7 +50,15 @@ export const postsRouter = createTRPCRouter({
   }),
 
   create: privateProcedure
-    .input(z.object({ content: z.string().emoji().min(1).max(255) }))
+    .input(
+      z.object({
+        content: z
+          .string()
+          .emoji("Only emoji messages allowed") // error message
+          .min(1)
+          .max(255),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId;
       const post = await ctx.prisma.post.create({
